@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
 
 const Page = ({ children }) => (
   <motion.div
@@ -282,6 +283,115 @@ function CategoryBlock({ cat, index }) {
 }
 
 /* ═══════════════════════════════════════════════════
+   FAQ
+   ═══════════════════════════════════════════════════ */
+
+const faqs = [
+  { q: 'Was kostet IT-Outsourcing bei ImageContent?', a: 'Die Kosten richten sich nach Unternehmensgröße, gewünschtem Serviceumfang und SLA-Level. Wir erstellen Ihnen ein individuelles Angebot — meist innerhalb von 24 Stunden nach dem ersten Gespräch. Gerne beginnen wir mit einem kostenlosen Beratungsgespräch.' },
+  { q: 'Wie schnell reagiert Ihr Support?', a: 'Im Durchschnitt antworten wir innerhalb von 4 Minuten. Unser 24×7-Team löst 78 % aller Tickets bereits im First-Level ohne Weiterleitung. Für kritische Systeme bieten wir SLAs mit garantierten Reaktionszeiten ab 15 Minuten.' },
+  { q: 'Betreut ihr auch kleinere Unternehmen?', a: 'Ja — unsere Kunden reichen von 5-Mann-Kanzleien bis zu Kliniken mit 800 Mitarbeitern. Das Leistungspaket wird immer individuell auf Ihre Größe und Ihr Budget zugeschnitten. Es gibt keine Mindestgröße.' },
+  { q: 'Können wir mit bestehender Hardware weiterarbeiten?', a: 'In den meisten Fällen ja. Wir analysieren Ihre aktuelle Infrastruktur und empfehlen nur dann Neuanschaffungen, wenn es technisch oder wirtschaftlich sinnvoll ist. Herstellerneutrale Beratung ist für uns selbstverständlich.' },
+  { q: 'Wie läuft ein typisches Projekt ab?', a: 'Nach dem Erstgespräch folgt eine Ist-Analyse, dann ein detaillierter Projektplan mit Zeitrahmen und Meilensteinen. Wir arbeiten nach einem strukturierten 5-Phasen-Modell: Analyse → Planung → Lieferung → Implementierung → Go-Live & Support.' },
+  { q: 'Welche Branchen betreut ihr?', a: 'Wir sind branchenübergreifend tätig — mit besonderer Expertise in Healthcare (Kliniken, Radiologie, Kardiologie), professionellen Dienstleistungen (Kanzleien, Steuerberater) und mittelständischen Produktions- und Handelsunternehmen.' },
+  { q: 'Gibt es SLA-Verträge mit Garantie?', a: 'Ja. Alle Support-Leistungen werden durch individuelle SLA-Verträge abgesichert. Je nach Paket definieren wir gemeinsam Reaktionszeiten, Verfügbarkeitsziele und Eskalationsprozesse. Alle Verträge sind ISO 9001-konform dokumentiert.' },
+  { q: 'Bietet ihr auch Cloud-Lösungen an?', a: 'Ja — von Microsoft Azure über hybride On-Premises/Cloud-Lösungen bis hin zu speziellen Healthcare-Cloud-Umgebungen. Wir beraten herstellerneutral und wählen die Lösung, die zu Ihren Anforderungen und Ihrem Budget passt.' },
+]
+
+function FAQ() {
+  const [open, setOpen] = useState(null)
+  return (
+    <section className="section" style={{ background:'#F7F9FC' }}>
+      <div className="container">
+        <div className="sec-head sec-head--center" style={{ marginBottom:48 }}>
+          <span className="tag">FAQ</span>
+          <h2 className="sec-title">Häufige Fragen.</h2>
+          <p className="sec-desc">Alles Wichtige auf einen Blick — falls noch etwas offen bleibt, melden Sie sich einfach.</p>
+        </div>
+
+        <div style={{ maxWidth:780, margin:'0 auto', display:'flex', flexDirection:'column', gap:12 }}>
+          {faqs.map((faq, i) => {
+            const isOpen = open === i
+            return (
+              <motion.div key={i}
+                initial={{ opacity:0, y:16 }}
+                whileInView={{ opacity:1, y:0 }}
+                viewport={{ once:true, margin:'-30px' }}
+                transition={{ delay: i * .04, duration:.4, ease:[.22,1,.36,1] }}
+                style={{
+                  background:'white', border:`1.5px solid ${isOpen ? '#2563EB' : '#E8EEFE'}`,
+                  borderRadius:14, overflow:'hidden',
+                  transition:'border-color .2s, box-shadow .2s',
+                  boxShadow: isOpen ? '0 4px 24px rgba(37,99,235,.1)' : 'none',
+                }}
+              >
+                {/* Question row */}
+                <button
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  style={{
+                    width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between',
+                    gap:16, padding:'20px 24px', background:'none', border:'none',
+                    cursor:'pointer', fontFamily:'inherit', textAlign:'left',
+                  }}
+                >
+                  <span style={{ fontSize:15, fontWeight:700, color: isOpen ? '#2563EB' : '#0F172A', lineHeight:1.4, flex:1 }}>
+                    {faq.q}
+                  </span>
+                  <motion.div
+                    animate={{ rotate: isOpen ? 45 : 0 }}
+                    transition={{ duration:.25 }}
+                    style={{
+                      width:28, height:28, borderRadius:'50%', flexShrink:0,
+                      background: isOpen ? '#EEF2FF' : '#F1F5F9',
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke={isOpen ? '#2563EB' : '#64748B'} strokeWidth="2.5"
+                      strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </motion.div>
+                </button>
+
+                {/* Answer */}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      key="answer"
+                      initial={{ height:0, opacity:0 }}
+                      animate={{ height:'auto', opacity:1 }}
+                      exit={{ height:0, opacity:0 }}
+                      transition={{ duration:.3, ease:[.22,1,.36,1] }}
+                      style={{ overflow:'hidden' }}
+                    >
+                      <p style={{
+                        fontSize:14.5, color:'#64748B', lineHeight:1.75,
+                        padding:'0 24px 20px', borderTop:'1px solid #F1F5F9',
+                        paddingTop:16,
+                      }}>
+                        {faq.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )
+          })}
+        </div>
+
+        <motion.div initial={{ opacity:0 }} whileInView={{ opacity:1 }} viewport={{ once:true }}
+          transition={{ delay:.3 }} style={{ textAlign:'center', marginTop:40 }}>
+          <p style={{ fontSize:15, color:'#64748B', marginBottom:16 }}>
+            Noch eine Frage? Wir antworten innerhalb von 24 Stunden.
+          </p>
+          <Link to="/kontakt" className="btn btn--outline">Frage stellen →</Link>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+/* ═══════════════════════════════════════════════════
    PAGE
    ═══════════════════════════════════════════════════ */
 
@@ -392,6 +502,9 @@ export default function Services() {
             </div>
           </section>
         </div>
+
+        {/* ── FAQ ── */}
+        <FAQ />
 
         {/* ── OUTSOURCING CTA ── */}
         <section className="section" style={{ background:'white' }}>

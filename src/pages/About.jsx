@@ -162,6 +162,58 @@ export default function About() {
           </div>
         </section>
 
+        {/* Team */}
+        <section className="section" style={{background:'#F7F9FC'}}>
+          <div className="container">
+            <div className="sec-head sec-head--center">
+              <span className="tag">Team</span>
+              <h2 className="sec-title">Die Köpfe dahinter.</h2>
+              <p className="sec-desc">Über 25 Jahre Erfahrung — gewachsen aus echten IT-Projekten, nicht aus Präsentationen.</p>
+            </div>
+
+            {/* TODO-Banner */}
+            <div style={{background:'#FFFBEB',border:'1.5px dashed #F59E0B',borderRadius:12,padding:'14px 20px',marginBottom:32,display:'flex',alignItems:'center',gap:12}}>
+              <span style={{fontSize:18}}>⚠️</span>
+              <p style={{fontSize:13,color:'#92400E',lineHeight:1.5}}>
+                <strong>Platzhalter:</strong> Bitte ersetzen Sie die Beispieldaten durch echte Teammitglieder (Name, Rolle, Foto-URL oder Initialen).
+              </p>
+            </div>
+
+            <motion.div className="r-grid-4" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:20}}
+              initial="hidden" whileInView="show" viewport={{once:true,margin:'-60px'}}
+              variants={{hidden:{},show:{transition:{staggerChildren:.1}}}}>
+              {[
+                { name:'Vorname Nachname', role:'Geschäftsführer', initials:'GF', accent:'#2563EB', linkedin:null },
+                { name:'Vorname Nachname', role:'Leiterin Healthcare-IT', initials:'HC', accent:'#10B981', linkedin:null },
+                { name:'Vorname Nachname', role:'Head of Security', initials:'SE', accent:'#7C3AED', linkedin:null },
+                { name:'Vorname Nachname', role:'IT-Infrastruktur & Support', initials:'IT', accent:'#0891B2', linkedin:null },
+              ].map((p,i)=>(
+                <motion.div key={i}
+                  variants={{hidden:{opacity:0,y:30},show:{opacity:1,y:0,transition:{duration:.5,ease:[.22,1,.36,1]}}}}
+                  whileHover={{y:-6,boxShadow:'0 12px 40px rgba(0,0,0,.09)'}}
+                  style={{background:'white',border:'1px solid #E8EEFE',borderRadius:18,padding:'28px 20px',textAlign:'center',transition:'box-shadow .2s'}}>
+                  {/* Avatar */}
+                  <div style={{
+                    width:72,height:72,borderRadius:'50%',
+                    background:`linear-gradient(135deg,${p.accent},${p.accent}88)`,
+                    display:'flex',alignItems:'center',justifyContent:'center',
+                    margin:'0 auto 16px',
+                    fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:900,
+                    fontSize:20,color:'white',
+                    boxShadow:`0 8px 24px ${p.accent}40`,
+                  }}>
+                    {p.initials}
+                  </div>
+                  <div style={{fontSize:15,fontWeight:800,color:'#0F172A',marginBottom:4}}>{p.name}</div>
+                  <div style={{fontSize:12,color:'#64748B',fontWeight:600,textTransform:'uppercase',letterSpacing:'.06em'}}>{p.role}</div>
+                  {/* Accent line */}
+                  <div style={{width:32,height:2,background:p.accent,borderRadius:2,margin:'14px auto 0'}}/>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section style={{padding:'0 0 96px'}}>
           <div className="container">

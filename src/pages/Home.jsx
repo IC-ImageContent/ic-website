@@ -1078,6 +1078,90 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── TESTIMONIALS ──────────────────────────── */}
+      <section className="section" style={{ background:'#F7F9FC' }}>
+        <div className="container">
+          <div className="sec-head sec-head--center">
+            <span className="tag">Kundenstimmen</span>
+            <h2 className="sec-title">Was unsere Kunden sagen.</h2>
+          </div>
+
+          <motion.div className="r-grid-3" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:24 }}
+            initial="hidden" whileInView="show" viewport={{ once:true, margin:'-60px' }}
+            variants={{ hidden:{}, show:{ transition:{ staggerChildren:.12 }} }}>
+            {[
+              {
+                quote: 'ImageContent hat unsere gesamte IT-Infrastruktur migriert — termingerecht, dokumentiert und ohne einen einzigen Ausfall. Absolut professionell.',
+                name: 'Dr. Thomas Weber',
+                role: 'IT-Leiter',
+                company: 'Klinikum Region Hannover',
+                initials: 'TW',
+                accent: '#2563EB',
+              },
+              {
+                quote: 'Der 24×7-Support ist Gold wert. Unser erstes Ticket war um 2 Uhr morgens — und wurde innerhalb von 5 Minuten bearbeitet. Beeindruckend.',
+                name: 'Sandra Kühn',
+                role: 'Geschäftsführerin',
+                company: 'Kühn & Partner Steuerberatung',
+                initials: 'SK',
+                accent: '#10B981',
+              },
+              {
+                quote: 'Das INQA-Coaching durch ImageContent hat unsere Digitalisierung um zwei Jahre beschleunigt. Klare Empfehlung für jeden mittelständischen Betrieb.',
+                name: 'Markus Schreiber',
+                role: 'COO',
+                company: 'Schreiber Logistik GmbH',
+                initials: 'MS',
+                accent: '#7C3AED',
+              },
+            ].map((t, i) => (
+              <motion.div key={i}
+                variants={{ hidden:{ opacity:0, y:40 }, show:{ opacity:1, y:0, transition:{ duration:.6, ease:[.22,1,.36,1] } } }}>
+                <div style={{
+                  background:'white', border:'1px solid #E8EEFE', borderRadius:20,
+                  padding:'32px 28px', height:'100%', display:'flex', flexDirection:'column', gap:20,
+                  position:'relative', overflow:'hidden',
+                }}>
+                  {/* Accent top bar */}
+                  <div style={{ position:'absolute', top:0, left:0, right:0, height:3, background:`linear-gradient(90deg,${t.accent},${t.accent}44)` }}/>
+
+                  {/* Stars */}
+                  <div style={{ display:'flex', gap:3 }}>
+                    {Array.from({length:5}).map((_,si) => (
+                      <svg key={si} width="16" height="16" viewBox="0 0 24 24" fill={t.accent} stroke="none">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                      </svg>
+                    ))}
+                  </div>
+
+                  {/* Quote */}
+                  <p style={{ fontSize:15, color:'#334155', lineHeight:1.75, flex:1, fontStyle:'italic' }}>
+                    „{t.quote}"
+                  </p>
+
+                  {/* Person */}
+                  <div style={{ display:'flex', alignItems:'center', gap:12, borderTop:'1px solid #F1F5F9', paddingTop:20 }}>
+                    <div style={{
+                      width:44, height:44, borderRadius:'50%',
+                      background:`linear-gradient(135deg,${t.accent},${t.accent}88)`,
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      fontFamily:"'Plus Jakarta Sans',sans-serif", fontWeight:800,
+                      fontSize:13, color:'white', flexShrink:0,
+                    }}>
+                      {t.initials}
+                    </div>
+                    <div>
+                      <div style={{ fontSize:14, fontWeight:700, color:'#0F172A' }}>{t.name}</div>
+                      <div style={{ fontSize:12, color:'#94A3B8' }}>{t.role} · {t.company}</div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
       {/* ── HEALTHCARE TEASER ─────────────────────── */}
       <section className="section">
         <div className="container r-grid-2" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:72, alignItems:'center' }}>

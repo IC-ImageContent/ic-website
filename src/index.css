@@ -135,6 +135,16 @@ button { cursor: pointer; font-family: inherit; }
 /* ─── Page wrapper ────────────────────────────────────── */
 .page { padding-top: 80px; }
 
+/* ─── Reduced motion (Barrierefreiheit) ───────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none !important; }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
 /* ─── Responsive ──────────────────────────────────────── */
 
 /* Tablet (≤900px) — 3-col → 2-col, 4-col → 2-col, 2-col → 1-col */
