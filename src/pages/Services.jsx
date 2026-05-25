@@ -204,6 +204,7 @@ function CategoryBlock({ cat, index }) {
           whileInView={{ opacity:1, y:0 }}
           viewport={{ once:true, margin:'-60px' }}
           transition={{ duration:.6, ease:[.22,1,.36,1] }}
+          className="cat-banner"
           style={{
             background: cat.bg,
             border: `1px solid ${cat.border}`,

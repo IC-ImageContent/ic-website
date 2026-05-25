@@ -136,7 +136,50 @@ button { cursor: pointer; font-family: inherit; }
 .page { padding-top: 80px; }
 
 /* ─── Responsive ──────────────────────────────────────── */
+
+/* Tablet (≤900px) — 3-col → 2-col, 4-col → 2-col, 2-col → 1-col */
+@media (max-width: 900px) {
+  .r-grid-3 { grid-template-columns: 1fr 1fr !important; }
+  .r-grid-4 { grid-template-columns: 1fr 1fr !important; }
+  .r-grid-2 { grid-template-columns: 1fr !important; gap: 40px !important; }
+}
+
+/* Phone (≤768px) */
 @media (max-width: 768px) {
   .section { padding: 64px 0; }
   .container { padding: 0 20px; }
+}
+
+/* Small phone (≤580px) */
+@media (max-width: 580px) {
+  .r-grid-3 { grid-template-columns: 1fr !important; }
+
+  /* CTA inner box — reduce horizontal padding */
+  .cta-inner { padding: 44px 24px !important; }
+
+  /* Contact form card — reduce padding */
+  .form-card { padding: 28px 20px !important; }
+
+  /* About page CTA banner — stack vertically */
+  .about-cta {
+    flex-direction: column !important;
+    padding: 40px 24px !important;
+    text-align: center !important;
+    align-items: center !important;
+  }
+
+  /* Category banner (Services page) — stack icon above text */
+  .cat-banner {
+    flex-direction: column !important;
+    padding: 24px 20px !important;
+    gap: 16px !important;
+    align-items: flex-start !important;
+  }
+
+  /* Outsourcing CTA (Services page) */
+  .services-cta { gap: 32px !important; }
+
+  /* Hero buttons — stack on tiny screens */
+  .hero-btns { flex-direction: column !important; align-items: flex-start !important; }
+  .hero-btns .btn { width: 100% !important; justify-content: center !important; }
 }

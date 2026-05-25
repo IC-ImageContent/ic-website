@@ -68,7 +68,7 @@ export default function About() {
         {/* Stats dark */}
         <section style={{background:'#080D18',padding:'80px 0'}}>
           <div className="container">
-            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:32}}>
+            <div className="r-grid-4" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:32}}>
               <Counter to={25} suffix="+" label="Jahre Erfahrung"/>
               <Counter to={9} label="Standorte"/>
               <Counter to={24} suffix="×7" label="Support"/>
@@ -79,7 +79,7 @@ export default function About() {
 
         {/* ISO Certification */}
         <section className="section" style={{background:'white'}}>
-          <div className="container" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:72,alignItems:'center'}}>
+          <div className="container r-grid-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:72,alignItems:'center'}}>
             <motion.div initial={{opacity:0,x:-30}} whileInView={{opacity:1,x:0}}
               viewport={{once:true}} transition={{duration:.6,ease:[.22,1,.36,1]}}>
               <span className="tag" style={{marginBottom:16}}>Qualitätsstandard</span>
@@ -116,7 +116,7 @@ export default function About() {
               <h2 className="sec-title">Was uns antreibt.</h2>
             </div>
 
-            <motion.div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:18}}
+            <motion.div className="r-grid-4" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:18}}
               initial="hidden" whileInView="show" viewport={{once:true,margin:'-60px'}}
               variants={{hidden:{},show:{transition:{staggerChildren:.1}}}}>
               {values.map((v,i)=>(
@@ -167,7 +167,8 @@ export default function About() {
           <div className="container">
             <motion.div initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}}
               viewport={{once:true}} transition={{duration:.6}}
-              style={{background:'linear-gradient(135deg,#1E3A5F,#2563EB)',borderRadius:22,padding:'56px 48px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:32,flexWrap:'wrap'}}>
+              className="about-cta"
+            style={{background:'linear-gradient(135deg,#1E3A5F,#2563EB)',borderRadius:22,padding:'56px 48px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:32,flexWrap:'wrap'}}>
               <div>
                 <h3 style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:800,fontSize:'clamp(22px,3vw,34px)',color:'white',marginBottom:8}}>Jetzt Kontakt aufnehmen.</h3>
                 <p style={{fontSize:16,color:'rgba(255,255,255,.7)'}}>Unverbindlich — wir melden uns innerhalb von 24 Stunden.</p>
@@ -181,9 +182,13 @@ export default function About() {
 
       </div>
       <style>{`
-        @media(max-width:900px){.container>div[style*="repeat(4"]{grid-template-columns:repeat(2,1fr)!important}}
-        @media(max-width:600px){.container>div[style*="repeat(4"]{grid-template-columns:1fr!important}}
-        @media(max-width:768px){.container>div[style*="1fr 1fr"]{grid-template-columns:1fr!important}}
+        /* About-specific overrides handled via r-grid-* classes in index.css */
+        @media(max-width:580px) {
+          /* ISO card font sizes */
+          .iso-card div:first-child { font-size: 52px !important; }
+          .iso-card div:nth-child(2) { font-size: 32px !important; }
+          .iso-card div:nth-child(3) { font-size: 40px !important; }
+        }
       `}</style>
     </Page>
   )

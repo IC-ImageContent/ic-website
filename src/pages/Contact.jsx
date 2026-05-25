@@ -256,7 +256,7 @@ export default function Contact() {
 
             {/* ── Form side ── */}
             <motion.div initial={{opacity:0,x:24}} animate={{opacity:1,x:0}} transition={{duration:.6,ease:[.22,1,.36,1],delay:.1}}>
-              <div style={{background:'white',border:'1px solid #E8EEFE',borderRadius:22,padding:'40px',boxShadow:'0 8px 48px rgba(0,0,0,.07)',overflow:'hidden'}}>
+              <div className="form-card" style={{background:'white',border:'1px solid #E8EEFE',borderRadius:22,padding:'40px',boxShadow:'0 8px 48px rgba(0,0,0,.07)',overflow:'hidden'}}>
 
                 {sent ? <SuccessScreen /> : (
                   <>

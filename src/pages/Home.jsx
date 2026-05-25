@@ -774,7 +774,7 @@ export default function Home() {
           </motion.p>
 
           <motion.div initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} transition={{ delay:.9, duration:.5 }}
-            style={{ display:'flex', gap:14, flexWrap:'wrap' }}>
+            className="hero-btns" style={{ display:'flex', gap:14, flexWrap:'wrap' }}>
             <motion.div whileHover={{ scale:1.04 }} whileTap={{ scale:.97 }}>
               <Link to="/kontakt" className="btn btn--primary">
                 Beratung anfragen
@@ -807,7 +807,7 @@ export default function Home() {
             <h2 className="sec-title">Drei Kernkompetenzen.</h2>
           </div>
 
-          <motion.div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20 }}
+          <motion.div className="r-grid-3" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20 }}
             initial="hidden" whileInView="show" viewport={{ once:true, margin:'-80px' }}
             variants={{ hidden:{}, show:{ transition:{ staggerChildren:.12 }} }}>
             {services.map((s, i) => (
@@ -1021,7 +1021,7 @@ export default function Home() {
       {/* ── STATS (dark) ──────────────────────────── */}
       <section style={{ background:'#080D18', padding:'96px 0' }}>
         <div className="container">
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:32 }}>
+          <div className="r-grid-4" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:32 }}>
             <Counter to={25} suffix="+" label="Jahre Erfahrung"/>
             <Counter to={9}  suffix=""  label="Standorte in D-A-CH"/>
             <Counter to={24} suffix="×7" label="Support-Verfügbarkeit"/>
@@ -1080,7 +1080,7 @@ export default function Home() {
 
       {/* ── HEALTHCARE TEASER ─────────────────────── */}
       <section className="section">
-        <div className="container" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:72, alignItems:'center' }}>
+        <div className="container r-grid-2" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:72, alignItems:'center' }}>
           <motion.div initial={{ opacity:0, x:-40 }} whileInView={{ opacity:1, x:0 }}
             viewport={{ once:true }} transition={{ duration:.7, ease:[.22,1,.36,1] }}>
             <span className="tag tag--green" style={{ marginBottom:16 }}>Healthcare-IT</span>
@@ -1124,6 +1124,7 @@ export default function Home() {
         <div className="container">
           <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
             viewport={{ once:true }} transition={{ duration:.7 }}
+            className="cta-inner"
             style={{
               background:'#080D18', borderRadius:24, padding:'72px 64px',
               textAlign:'center', position:'relative', overflow:'hidden',
@@ -1161,19 +1162,19 @@ export default function Home() {
 
       <style>{`
         @media (max-width: 900px) {
-          .grid-3 { grid-template-columns: 1fr 1fr !important; }
-          .grid-4 { grid-template-columns: 1fr 1fr !important; }
-          .grid-2 { grid-template-columns: 1fr !important; }
           .security-grid { grid-template-columns: 1fr !important; }
-          .infra-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 560px) {
-          .grid-3, .grid-4 { grid-template-columns: 1fr !important; }
+          .infra-grid    { grid-template-columns: 1fr !important; }
         }
         @media (min-width: 901px) and (max-width: 1100px) {
           .security-grid { grid-template-columns: 1fr 1fr !important; }
-          .infra-grid { grid-template-columns: 1fr 1fr !important; }
+          .infra-grid    { grid-template-columns: 1fr 1fr !important; }
         }
+        /* Hero letter-spacing – reduce on mobile */
+        @media (max-width: 480px) {
+          h1[style] { letter-spacing: -1.5px !important; }
+        }
+        /* Security/infra SVG cards – make SVGs scale inside container */
+        .security-grid svg, .infra-grid svg { max-width: 100%; height: auto; }
       `}</style>
     </Page>
   )

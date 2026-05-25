@@ -53,7 +53,7 @@ export default function Healthcare() {
               <h2 className="sec-title">Sechs Spezialgebiete.</h2>
             </div>
 
-            <motion.div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20}}
+            <motion.div className="r-grid-3" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20}}
               initial="hidden" whileInView="show" viewport={{once:true,margin:'-60px'}}
               variants={{hidden:{},show:{transition:{staggerChildren:.1}}}}>
               {specialties.map((s,i)=>(
@@ -102,7 +102,7 @@ export default function Healthcare() {
         {/* INQA + CTA */}
         <section style={{background:'linear-gradient(135deg,#065F46,#047857,#10B981)',padding:'80px 0',position:'relative',overflow:'hidden'}}>
           <div aria-hidden style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px)',backgroundSize:'36px 36px'}}/>
-          <div className="container" style={{position:'relative',zIndex:1,display:'flex',alignItems:'center',justifyContent:'space-between',gap:40,flexWrap:'wrap'}}>
+          <div className="container hc-cta" style={{position:'relative',zIndex:1,display:'flex',alignItems:'center',justifyContent:'space-between',gap:40,flexWrap:'wrap'}}>
             <div style={{maxWidth:520}}>
               <span className="tag" style={{marginBottom:16,background:'rgba(255,255,255,.15)',color:'white'}}>Kontakt</span>
               <h2 style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:800,fontSize:'clamp(26px,4vw,42px)',color:'white',letterSpacing:'-.8px',marginBottom:14}}>
@@ -122,8 +122,10 @@ export default function Healthcare() {
 
       </div>
       <style>{`
-        @media(max-width:900px){.container>div[style*="repeat(3"]{grid-template-columns:repeat(2,1fr)!important}}
-        @media(max-width:600px){.container>div[style*="repeat(3"]{grid-template-columns:1fr!important}}
+        /* Healthcare CTA — stack on mobile */
+        @media(max-width:580px){
+          .hc-cta { flex-direction: column !important; gap: 24px !important; }
+        }
       `}</style>
     </Page>
   )

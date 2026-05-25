@@ -37,7 +37,7 @@ export default function Footer() {
   return (
     <footer style={{ background:'#080D18', color:'#fff', padding:'72px 0 32px' }}>
       <div className="container">
-        <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr', gap:48, marginBottom:56, flexWrap:'wrap' }}>
+        <div className="footer-grid" style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr', gap:48, marginBottom:56 }}>
 
           {/* Brand */}
           <div>
@@ -110,14 +110,11 @@ export default function Footer() {
 
       <style>{`
         @media (max-width: 900px) {
-          footer .container > div:first-child {
-            grid-template-columns: 1fr 1fr !important;
-          }
+          .footer-grid { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 560px) {
-          footer .container > div:first-child {
-            grid-template-columns: 1fr !important;
-          }
+          .footer-grid { grid-template-columns: 1fr !important; }
+          footer .container > div:last-child { flex-direction: column !important; align-items: flex-start !important; }
         }
       `}</style>
     </footer>
