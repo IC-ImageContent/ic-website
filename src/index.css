@@ -135,6 +135,29 @@ button { cursor: pointer; font-family: inherit; }
 /* ─── Page wrapper ────────────────────────────────────── */
 .page { padding-top: 80px; }
 
+/* ─── Gradient text sweep animation ──────────────────── */
+.gradient-text {
+  background: linear-gradient(90deg, #60A5FA, #A78BFA, #38BDF8, #60A5FA);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-sweep 4s linear infinite;
+  display: inline;
+}
+@keyframes gradient-sweep {
+  0%   { background-position: 0% center; }
+  100% { background-position: 250% center; }
+}
+
+/* ─── Glassmorphism utility ───────────────────────────── */
+.glass {
+  background: rgba(255,255,255,.05) !important;
+  border: 1px solid rgba(255,255,255,.1) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
 /* ─── Reduced motion (Barrierefreiheit) ───────────────── */
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none !important; }

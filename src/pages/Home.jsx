@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   motion, useInView, useMotionValue, useTransform,
@@ -649,28 +649,48 @@ function Counter({ to, suffix='', label }) {
   )
 }
 
-/* ── 3D Tilt card ── */
-function TiltCard({ children, style }) {
+/* ── 3D Tilt card with mouse-glow ── */
+function TiltCard({ children, style, glowColor = 'rgba(37,99,235,.18)' }) {
   const ref = useRef(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const rotateX = useTransform(y, [-.5, .5], [5, -5])
   const rotateY = useTransform(x, [-.5, .5], [-5, 5])
+  const [glow, setGlow] = useState({ px:0, py:0, on:false })
 
   function onMove(e) {
     const rect = ref.current.getBoundingClientRect()
     x.set((e.clientX - rect.left) / rect.width - .5)
     y.set((e.clientY - rect.top) / rect.height - .5)
+    setGlow({ px: e.clientX - rect.left, py: e.clientY - rect.top, on:true })
   }
-  function onLeave() { x.set(0); y.set(0) }
+  function onLeave() {
+    x.set(0); y.set(0)
+    setGlow(g => ({ ...g, on:false }))
+  }
 
   return (
     <motion.div ref={ref}
-      style={{ rotateX, rotateY, transformStyle:'preserve-3d', ...style }}
+      style={{ rotateX, rotateY, transformStyle:'preserve-3d', position:'relative', ...style }}
       whileHover={{ scale:1.02, zIndex:2 }}
       onMouseMove={onMove} onMouseLeave={onLeave}
       transition={{ type:'spring', stiffness:300, damping:30 }}
     >
+      {/* Mouse glow — sits on top of card bg, below text */}
+      <div aria-hidden style={{
+        position:'absolute', inset:0, pointerEvents:'none', zIndex:0, borderRadius:'inherit', overflow:'hidden',
+      }}>
+        <div style={{
+          position:'absolute',
+          width:320, height:320,
+          top: glow.py - 160,
+          left: glow.px - 160,
+          background:`radial-gradient(circle, ${glowColor}, transparent 70%)`,
+          borderRadius:'50%',
+          opacity: glow.on ? 1 : 0,
+          transition:'opacity .35s',
+        }}/>
+      </div>
       {children}
     </motion.div>
   )
@@ -722,53 +742,62 @@ export default function Home() {
   return (
     <Page>
       {/* ── HERO ──────────────────────────────────── */}
-      <section style={{ minHeight:'100vh', display:'flex', alignItems:'center', position:'relative', overflow:'hidden', background:'linear-gradient(160deg,#F0F6FF 0%,#EBF3FF 50%,#DBEAFE 100%)' }}>
+      <section style={{ minHeight:'100vh', display:'flex', alignItems:'center', position:'relative', overflow:'hidden', background:'#060B14' }}>
 
-        {/* Animated grid bg */}
+        {/* Aurora blobs */}
+        {[
+          { color:'rgba(37,99,235,.55)',   w:720, h:640, top:'-18%',  right:'-8%',  dur:15, dx:[0,40,-25,0], dy:[0,-30,20,0] },
+          { color:'rgba(124,58,237,.38)', w:600, h:540, top:'10%',   left:'-12%',  dur:19, dx:[0,-25,35,0], dy:[0,25,-20,0] },
+          { color:'rgba(8,145,178,.28)',  w:520, h:460, bottom:'-18%',right:'22%', dur:13, dx:[0,20,-30,0], dy:[0,-20,15,0] },
+          { color:'rgba(16,185,129,.16)', w:440, h:380, top:'45%',   right:'42%',  dur:17, dx:[0,-20,15,0], dy:[0,15,-25,0] },
+        ].map((b,i) => (
+          <motion.div key={i} aria-hidden
+            animate={{ x:b.dx, y:b.dy, scale:[1,1.12,.93,1] }}
+            transition={{ duration:b.dur, repeat:Infinity, ease:'easeInOut', delay:i*3.8 }}
+            style={{
+              position:'absolute', width:b.w, height:b.h,
+              top:b.top, bottom:b.bottom, right:b.right, left:b.left,
+              background:`radial-gradient(circle, ${b.color}, transparent 65%)`,
+              filter:'blur(100px)', pointerEvents:'none', borderRadius:'50%',
+            }}
+          />
+        ))}
+
+        {/* Subtle dot grid */}
         <div aria-hidden style={{
           position:'absolute', inset:0, pointerEvents:'none',
-          backgroundImage:'linear-gradient(rgba(37,99,235,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.06) 1px,transparent 1px)',
+          backgroundImage:'linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px)',
           backgroundSize:'56px 56px',
           maskImage:'radial-gradient(ellipse 85% 85% at 50% 50%,black 20%,transparent 80%)',
           WebkitMaskImage:'radial-gradient(ellipse 85% 85% at 50% 50%,black 20%,transparent 80%)',
         }}/>
 
-        {/* Floating blobs */}
-        {[
-          { w:520, h:520, top:'-160px', right:'-80px', color:'rgba(37,99,235,.14)' },
-          { w:380, h:380, bottom:'-100px', left:'-60px', color:'rgba(30,58,95,.11)', delay:'-4s' },
-        ].map((b,i) => (
-          <motion.div key={i} aria-hidden
-            animate={{ x:[0,24,0], y:[0,-16,0], scale:[1,1.04,.98,1] }}
-            transition={{ duration:9+i*2, repeat:Infinity, ease:'easeInOut', delay: i*4 }}
-            style={{
-              position:'absolute', width:b.w, height:b.h,
-              top:b.top, bottom:b.bottom, right:b.right, left:b.left,
-              background:`radial-gradient(circle,${b.color},transparent 70%)`,
-              filter:'blur(70px)', pointerEvents:'none', borderRadius:'50%',
-            }}
-          />
-        ))}
-
         <div className="container" style={{ paddingTop:100, paddingBottom:80, position:'relative', zIndex:1 }}>
 
-          {/* Badge */}
+          {/* Badge — glassmorphism */}
           <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:.6 }}>
-            <span className="tag" style={{ marginBottom:28, display:'inline-flex', alignItems:'center', gap:8, background:'white', border:'1px solid #E8EEFE', color:'#2563EB', boxShadow:'0 2px 12px rgba(37,99,235,.1)' }}>
-              <motion.span animate={{ opacity:[1,.3,1] }} transition={{ duration:2, repeat:Infinity }} style={{ width:7, height:7, background:'#2563EB', borderRadius:'50%', display:'inline-block' }}/>
+            <span style={{ marginBottom:28, display:'inline-flex', alignItems:'center', gap:8,
+              background:'rgba(255,255,255,.08)', border:'1px solid rgba(255,255,255,.14)',
+              backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
+              borderRadius:50, padding:'5px 14px',
+              fontSize:11, fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase',
+              color:'rgba(255,255,255,.8)',
+            }}>
+              <motion.span animate={{ opacity:[1,.3,1] }} transition={{ duration:2, repeat:Infinity }}
+                style={{ width:7, height:7, background:'#3B82F6', borderRadius:'50%', display:'inline-block' }}/>
               ISO 9001 zertifiziert · Gegründet 2000
             </span>
           </motion.div>
 
-          {/* Headline mask reveal */}
-          <h1 style={{ fontFamily:"'Plus Jakarta Sans',sans-serif", fontWeight:900, fontSize:'clamp(48px,8vw,96px)', letterSpacing:'-3px', color:'#0F172A', lineHeight:1.05, marginBottom:28 }}>
+          {/* Headline */}
+          <h1 style={{ fontFamily:"'Plus Jakarta Sans',sans-serif", fontWeight:900, fontSize:'clamp(48px,8vw,96px)', letterSpacing:'-3px', color:'#FFFFFF', lineHeight:1.05, marginBottom:28 }}>
             <HeroLine text="Ihre IT." delay={0.1}/>
-            <HeroLine text={<><span style={{color:'#2563EB'}}>Sicher.</span> Skalierbar.</>} delay={0.25}/>
-            <HeroLine text="Zertifiziert." delay={0.4}/>
+            <HeroLine text={<span className="gradient-text">Sicher. Skalierbar.</span>} delay={0.25}/>
+            <HeroLine text={<span style={{color:'rgba(255,255,255,.6)'}}>Zertifiziert.</span>} delay={0.4}/>
           </h1>
 
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:.7, duration:.6 }}
-            style={{ fontSize:'clamp(16px,2vw,20px)', color:'#64748B', maxWidth:500, lineHeight:1.7, marginBottom:40 }}>
+            style={{ fontSize:'clamp(16px,2vw,20px)', color:'rgba(255,255,255,.52)', maxWidth:500, lineHeight:1.75, marginBottom:40 }}>
             IT-Lösungen für Unternehmen im D-A-CH-Raum —<br/>
             von Security bis Healthcare, seit 2000.
           </motion.p>
@@ -782,7 +811,7 @@ export default function Home() {
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale:1.04 }} whileTap={{ scale:.97 }}>
-              <Link to="/leistungen" className="btn btn--outline">
+              <Link to="/leistungen" className="btn btn--ghost">
                 Leistungen entdecken
               </Link>
             </motion.div>
@@ -792,8 +821,8 @@ export default function Home() {
           <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:1.4 }}
             style={{ position:'absolute', bottom:-40, left:'50%', transform:'translateX(-50%)' }}>
             <motion.div animate={{ y:[0,8,0] }} transition={{ duration:1.8, repeat:Infinity }}
-              style={{ width:24, height:40, border:'2px solid rgba(37,99,235,.3)', borderRadius:12, display:'flex', justifyContent:'center', paddingTop:6 }}>
-              <motion.div style={{ width:4, height:8, background:'#2563EB', borderRadius:2 }}/>
+              style={{ width:24, height:40, border:'2px solid rgba(255,255,255,.18)', borderRadius:12, display:'flex', justifyContent:'center', paddingTop:6 }}>
+              <motion.div style={{ width:4, height:8, background:'rgba(255,255,255,.45)', borderRadius:2 }}/>
             </motion.div>
           </motion.div>
         </div>
@@ -813,7 +842,7 @@ export default function Home() {
             {services.map((s, i) => (
               <motion.div key={s.title}
                 variants={{ hidden:{ opacity:0, y:40 }, show:{ opacity:1, y:0, transition:{ duration:.6, ease:[.22,1,.36,1] } } }}>
-                <TiltCard style={{ height:'100%' }}>
+                <TiltCard style={{ height:'100%' }} glowColor={`${s.accent}22`}>
                   <div style={{
                     background:'white', border:'1px solid #E8EEFE', borderRadius:20,
                     padding:'36px 32px', height:'100%', position:'relative', overflow:'hidden',
@@ -1018,14 +1047,42 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── STATS (dark) ──────────────────────────── */}
-      <section style={{ background:'#080D18', padding:'96px 0' }}>
-        <div className="container">
-          <div className="r-grid-4" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:32 }}>
-            <Counter to={25} suffix="+" label="Jahre Erfahrung"/>
-            <Counter to={9}  suffix=""  label="Standorte in D-A-CH"/>
-            <Counter to={24} suffix="×7" label="Support-Verfügbarkeit"/>
-            <Counter to={9001} suffix="" label="ISO Zertifizierung"/>
+      {/* ── STATS (dark + aurora + glass) ──────────── */}
+      <section style={{ background:'#080D18', padding:'96px 0', position:'relative', overflow:'hidden' }}>
+        {/* Aurora glow behind stats */}
+        <motion.div aria-hidden
+          animate={{ x:[0,30,-20,0], scale:[1,1.15,.92,1] }}
+          transition={{ duration:14, repeat:Infinity, ease:'easeInOut' }}
+          style={{
+            position:'absolute', width:800, height:500, top:'50%', left:'50%',
+            transform:'translate(-50%,-50%)',
+            background:'radial-gradient(ellipse, rgba(37,99,235,.18) 0%, rgba(124,58,237,.1) 40%, transparent 70%)',
+            filter:'blur(70px)', pointerEvents:'none',
+          }}
+        />
+        <div className="container" style={{ position:'relative', zIndex:1 }}>
+          <div className="r-grid-4" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:20 }}>
+            {[
+              { to:25, suffix:'+', label:'Jahre Erfahrung' },
+              { to:9,  suffix:'',  label:'Standorte in D-A-CH' },
+              { to:24, suffix:'×7',label:'Support-Verfügbarkeit' },
+              { to:9001,suffix:'', label:'ISO Zertifizierung' },
+            ].map((s,i) => (
+              <motion.div key={i}
+                initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }}
+                viewport={{ once:true }} transition={{ delay:i*.1, duration:.5 }}
+                whileHover={{ borderColor:'rgba(255,255,255,.18)', background:'rgba(255,255,255,.07)' }}
+                style={{
+                  background:'rgba(255,255,255,.04)',
+                  border:'1px solid rgba(255,255,255,.08)',
+                  backdropFilter:'blur(16px)',
+                  WebkitBackdropFilter:'blur(16px)',
+                  borderRadius:18, padding:'32px 20px',
+                  transition:'background .3s, border-color .3s',
+                }}>
+                <Counter to={s.to} suffix={s.suffix} label={s.label}/>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
